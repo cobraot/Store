@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://pay.sellsn.io/embed.min.js"></script>
+    <style>
+      :root {
+        --lighter-black: #222;
+        --dark-black: #171717;
+        --blue-outline: #0269d9; 
+        --button-hover-black: #1e1e1e; 
+        --light-bg: #f8f9fa;
+        --light-text: #333;
+      }
+      body.dark {
+        background-color: var(--dark-black);
+        color: white;
+      }
+  
+      body.light {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+      }
+  
+      .input-field {
+        border: 1px solid var(--lighter-black);
+        background-color: var(--dark-black);
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        transition: border-color 0.3s ease;
+      }
+  
+      .input-field:focus {
+        border-color: var(--blue-outline);
+        outline: none;
+      }
+  
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--dark-black);
+        border: 4px solid var(--blue-outline);
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 1000;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+      }
+  
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+      }
+
+
+
+      #modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  display: none; /* Hidden by default */
+}
+
+#modalContent {
+  background: #282828;
+  padding: 50px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  max-width: 70%; /* Adjust as needed */
+  width: 70%; /* Adjust as needed */
+  height: 370px;
+  position: relative;
+}
+
+#modalContent img {
+  top: 20px; /* Adjust as needed */
+  left: 20px; /* Adjust as needed */
+  max-width: 45%; /* Adjust as needed */
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#modalContent h2 {
+  top: 30px;
+  left: 700px;
+  font-size: 2.5rem;
+  color: #29b6f6;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+#modalContent p {
+  top: 90px;
+  left: 625px;
+  font-size: 1.3rem;
+  color: #f5f5f5;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+}
+
+#modalContent p span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff5252;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  text-decoration: underline;
+}
+
+#closeModal {
+  top: 295px; /* Adjust as needed */
+  right: 295px; /* Adjust as needed */
+  background: #424242;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: auto) {
+  #modalContent {
+    max-width: auto;
+    width: auto;
+    padding: auto;
+  }
+  #modalContent img {
+    max-width: 50%;
+    top: auto;
+    left: auto;
+  }
+  #modalContent h2 {
+    top: auto;
+    left: auto;
+    font-size: 2rem;
+  }
+  #modalContent p {
+    top: auto;
+    left: auto;
+    font-size: 1.1rem;
+  }
+}
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+<body class="bg-[var(--lighter-black)] text-white min-h-screen flex flex-col">
+
+  <header class="bg-[var(--dark-black)] py-6 px-8 shadow-lg border-b-4 border-[var(--blue-outline)] flex items-center justify-between">
+    <!-- Logo and Title -->
+    <div class="flex items-center space-x-4">
+      <img src="/images/logo.png" alt="Logo" class="w-12 h-12 rounded-full">
+      <h1 class="text-2xl font-bold text-white">Store</h1>
+    </div>
+  
+
+  
+    <!-- Right-Side Features -->
+    <div class="flex items-center space-x-6">
+      <!-- Dashboard Link -->
+      <a href="/dashboard" class="text-blue-400 hover:text-white font-bold hidden md:block">Back to Dashboard</a>
+    </div>
+  
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuToggle" class="text-gray-300 hover:text-white md:hidden">
+      ☰
+    </button>
+  </header>
+  
+  <!-- Mobile Navigation -->
+  <nav id="mobileMenu" class="hidden bg-[var(--dark-black)] p-4 md:hidden">
+    <a href="/home" class="block text-gray-300 hover:text-white">Home</a>
+    <a href="/products" class="block text-gray-300 hover:text-white">Products</a>
+    <a href="/about" class="block text-gray-300 hover:text-white">About</a>
+    <a href="/contact" class="block text-gray-300 hover:text-white">Contact</a>
+    <a href="/dashboard" class="block text-blue-400 hover:text-white font-bold">Back to Dashboard</a>
+  </nav>
+  
+
+
+
+
+
+  <div id="modal">
+    <div id="modalContent">
+
+      <h2>❗ Nizzware News!! ❗</h2>
+      <p>
+        <strong>🔥 Five M External Now Live!! 🔥</strong><br> <strong>💸 Best Prices!! 💸</strong>
+      </p>
+      <button id="closeModal">Close</button>
+    </div>
+  </div>
+  
+  <script>
+    // Show the modal when the page loads
+    document.addEventListener("DOMContentLoaded", () => {
+      const modal = document.getElementById("modal");
+      const closeModal = document.getElementById("closeModal");
+  
+      // Display the modal
+      modal.style.display = "flex";
+  
+      // Close the modal on button click
+      closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+    });
+  </script>
+<main class="container mx-auto px-6 lg:px-16 flex-grow mt-10">
+  <!-- Product Grid -->
+  <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <!-- Product cards are dynamically added here -->
+  </div>
+</main>
+
+<!-- Modal for Product Details and Buying -->
+<div id="productModal" class="hidden modal">
+  <h2 class="text-lg font-bold mb-4" id="modalProductName">Product Details</h2>
+  <div id="modalProductDetails" class="space-y-4 text-sm"></div>
+  <form id="buyForm" class="space-y-4">
+    <div class="flex justify-end space-x-4 mt-6">
+      <!-- "Continue" Button -->
+      <button 
+        data-sellsn-gid="" 
+        data-sellsn-sid="88163f27-c70e-4ee9-8fae-7f268d8f61fb" 
+        type="submit" 
+        class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        Continue
+      </button>
+      <!-- "Cancel" Button -->
+      <button 
+        type="button" 
+        id="productCloseModal" 
+        class="py-2 px-4 bg-[var(--button-hover-black)] text-white rounded">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+<div id="modalBackdrop" class="hidden modal-backdrop"></div>
+
+<footer class="bg-[var(--dark-black)] py-4 mt-10 text-center text-gray-300 border-t-4 border-[var(--blue-outline)]">
+  <p>© 2024 Nizzware Solutions. All rights reserved.</p>
+  <p>
+    Join us on 
+    <a href="https://discord.gg/nizzware" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">
+      Discord
+    </a>
+  </p>
+</footer>
+<style>
+  body {
+    background: url('https://i.ibb.co/jWpw51S/BACKGROUND.png') no-repeat center center fixed;
+    background-size: cover; /* Makes sure the image covers the entire background */
+  }
+</style>
+<script>
+  const productGrid = document.getElementById("productGrid");
+  const productModal = document.getElementById("productModal");
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalProductName = document.getElementById("modalProductName");
+  const modalProductDetails = document.getElementById("modalProductDetails");
+  const buyForm = document.getElementById("buyForm");
+
+  const products = [
+  {
+    name: "Lucky Dip Raffle 💥",
+    status: "In Stock",
+    image: "/images/nizz.png",
+    features: [
+      "✅ Raffle Ticket",
+      "✅ Only One Winner!!",
+      "✅ Lifetime Key Of Your Choice If You Win!", 
+      "✅ Will Be Random Generated Number At Number Draw",
+      "✅ Watch Live In VC 1st Febuary 2025 10pm NZST"    
+    
+    ],
+    product_id: "964f689e-62e7-4e82-9820-88ba3f1a370f",
+
+  },
+  {
+    name: "Five-M External 💥",
+    status: "In Stock",
+    image: "/images/fivem.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Streamproof",
+      "✅ Heaps Of Exploits"
+    ],
+    product_id: "3061647e-2e67-450f-85d5-9e8f9969783e",
+
+  },
+  {
+    name: "Nizzware BO6 Internal 💥",
+    status: "Fully Undetected",
+    image: "/images/internal.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "✅ OBS Streamproof ( Setup Required )",
+      "✅ Controller Support"
+    ],
+    product_id: "784b308b-1432-45e0-a3a5-932865eae0e8", // Unique ID for Internal
+  },
+  {
+    name: "Nizzware BO6 External 💥",
+    status: "Fully Undetected",
+    image: "/images/external.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "✅ Fully Streamproof",
+      "✅ Humanized Aim",
+      "✅ No BO6 Detections",
+      "❌ Controller Support"
+    ],
+    product_id: "59b1c325-6191-4b76-9610-d927dfb64435", // Unique ID for External
+  },
+  {
+    name: "BO6 External ESP ONLY",
+    status: "Fully Undetected",
+    image: "/images/bo6extesp.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "✅ Fully Streamproof",
+      "✅ No BO6 Detections",
+      "❌ NO AIMBOT Or Controller Support"
+
+    ],
+    product_id: "f66ded88-4c03-44e1-991a-34ec425cff92",
+  },
+  {
+    name: "Fortnite External 💥",
+    status: "Fully Undetected",
+    image: "/images/fnext.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ EAC + Battle Eye Supported",
+      "✅ Steamproof If Game Capture",
+      "❌ Controller Support"
+
+    ],
+    product_id: "f9ccae4b-30a8-4f51-957d-fdca0deb402b", 
+
+  },
+  {
+    name: "Fortnite NFA Accounts 💥",
+    status: "In Stock",
+    image: "/images/fnext.png",
+    features: [
+      "✅ Epic Games Logins",
+      "✅ Skinned Accounts",
+      "✅ Rare Accounts Available",
+      "❌ Not Full Access"
+    ],
+    product_id: "e40d8f2e-7a69-40c7-be81-42e7a101244e", // Unique ID for Internal
+  },
+  {
+    name: "Fresh Accounts 💥",
+    status: "In Stock",
+    image: "/images/freshaccounts.png",
+    features: [
+      "✅ Full Access",
+      "✅ Phone Verified",
+      "✅ 0 Hours Played",
+      "❌ No Games Purchased!"
+    ],
+    product_id: "26815841-e173-4172-aaf5-e01257f48752",
+
+  },
+  {
+    name: "Steam Linked Accounts 💥",
+    status: "In Stock",
+    image: "/images/steamlinked.png",
+    features: [
+      "✅ Hand Linked Steam Accounts",
+      "✅ Accounts From Level 1 To Prestige Master",
+      "✅ Steams Full Access",
+      "✅ Activisions Are TEMP!!"
+    ],
+    product_id: "2c4501a6-6f46-4fca-a7ba-f6f33973c7b8",
+
+  },
+  {
+    name: "Nizzware Gen Top Up 💥",
+    status: "In Stock",
+    image: "/images/gentopup.png",
+    features: [
+      "✅ Top Up Keys For Our Discord Bot",
+      "✅ Redeem In Our Discord Server"
+    ],
+    product_id: "c9862fca-5337-4c37-ab0b-55d9502cb4b9",
+  },
+  {
+    name: "CS2 External",
+    status: "Fully Undetected",
+    image: "/images/cs2external.png",
+    features: [
+    "✅ Windows 10 & 11 Supported",
+    "✅ Intel & AMD Supported",
+    "✅ Steamproof If Game Capture",
+    "✅ No Detection History",
+    "✅ Controller Support"
+    ],
+    product_id: "5b1addba-fa25-4a96-ae27-41dbb4babf36"
+  },
+  {
+    name: "Full Access Accounts 💥",
+    status: "In Stock",
+    image: "/images/fullaccess.png",
+    features: [
+      "✅ Full Access, Fully Yours",
+      "✅ Access To All Mail",
+      "✅ No Game Account Included",
+      "✅ Activision Account ONLY"
+    ],
+    product_id: "a7a0c0f8-fb5a-4997-b944-d5835e225787"
+  },
+  {
+    name: "Ai Aim + ESP",
+    status: "Fully Undetected",
+    image: "/images/aiaim.png",
+    features: [
+      "✅ Ai Tool",
+      "✅ Supports Various Games",
+      "✅ Never Detected",
+      "✅ Python 3.11.0 Required"
+    ],
+    product_id: "265a3a15-6f09-404a-84fe-50839d9d1d8e"
+  },
+  {
+    name: "BO6 All In One",
+    status: "Fully Undetected",
+    image: "images/allinone.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "✅ OBS Streamproof ( Setup Required )",
+      "❌ NO AIMBOT Or Controller Support"
+    ],
+    product_id: "e933b751-34f9-47ce-8008-10c0fb5ebdf7",
+
+  },
+  {
+    name: "BO6 Unlock All 💥",
+    status: " Fully Undetected",
+    image: "/images/unlock.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "✅ F6 To Activate, F5 To Deactivate"
+    ],
+    product_id: "f4ead081-0788-4adc-afc8-996f8a97bb0c",
+  },
+  {
+    name: "BO6 Camo Tool 💥",
+    status: "Fully Undetected",
+    image: "/images/camo.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "✅ No BO6 Detections",
+      "❌ NO AIMBOT Or Controller Support"
+    ],
+    product_id: "a44b8ef2-b9f2-42c8-a602-043bc08a496d",
+  },
+  {
+    name: "Perm Spoof 💥",
+    status: "Fully Operational",
+    image: "/images/perm.png",
+    features: [
+    "✅ Windows 10 & 11 Supported",
+    "✅ Intel & AMD Supported",
+    "✅ ASUS Supported",
+    "✅ Fortnite Supported",
+    "❌ HP, Alienware & Dell NOT Supported",
+    "❌ WIFI Bluetooth MUST Be Replaced"
+    ],
+    product_id: "320dddd0-673e-45a7-bb83-a540807de943",
+  },
+  {
+    name: "Temp Spoof",
+    status: "Fully Undetected",
+    image: "/images/spoof.png",
+    features: [
+    "✅ Windows 10 & 11 Supported",
+    "✅ Intel & AMD Supported",
+    "✅ Works Until Restart"
+    ],
+    product_id: "feb6ce6e-d870-4dfc-8050-3dc2b36f3b5f",
+  },
+  {
+    name: "AFK Tool",
+    status: "Fully Undetected",
+    image: "/images/afk.png",
+    features: [
+      "✅ Windows 10 & 11 Supported",
+      "✅ Intel & AMD Supported",
+      "✅ Xbox App, Steam & Battle.NET Supported",
+      "❌ No Controller Support",
+      "✅ Level Up Fast!!"
+    ],
+    product_id: "652efb8b-653c-492e-8db1-2b1f1921a4f6",
+  },
+  {
+    name: "Xbox Gamepass Accounts 💥",
+    status: " In Stock",
+    image: "/images/xbox.png",
+    features: [
+      "✅ Non Full Access",
+      "✅ 3 Hour Warranty"
+    ],
+    product_id: "0cee852c-c856-4a1d-9816-f0b6cac91831",
+  },
+  {
+    name: "Instagram Boosting",
+    status: "Fully Operational",
+    image: "/images/insta.png",
+    features: [
+      "✅ Quick Easy Social Boosting",
+      "✅ 24-48 Hour Completion Time",
+      "✅ Processed Via Discord"
+    ],
+    product_id: "16f7d5e5-1fc9-40a7-9bbb-6647133612c0"
+  },
+  {
+    name: "Tik-Tok Boosting",
+    status: "Fully Operational",
+    image: "/images/tiktok.png",
+    features: [
+      "✅ Quick Easy Social Boosting",
+      "✅ 24-48 Hour Completion Time",
+      "✅ Processed Via Discord"
+    ],
+    product_id: "1611d5f3-7f1b-4323-92b4-84b70a5f0502",
+  },
+  {
+    name: "Youtube Boosting",
+    status: "Fully Operational",
+    image: "/images/youtube.png",
+    features: [      
+      "✅ Quick Easy Social Boosting",
+      "✅ 24-48 Hour Completion Time",
+      "✅ Processed Via Discord"
+    ],
+    product_id: "5f9b0b50-9602-43c4-b98b-77145a0c760a"
+  },
+  {
+    name: "Twitch Boosting",
+    status: "Fully Operational",
+    image: "/images/twitch.png",
+    features: [
+      "✅ Quick Easy Social Boosting",
+      "✅ 24-48 Hour Completion Time",
+      "✅ Processed Via Discord"
+    ],
+    product_id: "71360c3b-ad20-4c80-b84c-f8b4b4c51d70",
+  },
+  {
+    name: "Donations",
+    status: "We Want Your Money LOL",
+    image: "/images/LOGO.png",
+    features: [      
+      "✅ For Custom Bulk Orders",
+      "✅ Be Sure To Send Order ID"
+    ],
+    product_id: "03344f86-29a3-42ab-babd-ce346535b47e",
+  },
+
+
+
+
+
+
+];
+
+  // Render Product Cards
+  function renderProducts() {
+  products.forEach((product) => {
+    const card = document.createElement("div");
+    card.classList.add(
+      "bg-[var(--dark-black)]",
+      "border-4",
+      "border-[var(--blue-outline)]",
+      "p-6",
+      "rounded-lg",
+      "shadow-lg",
+      "transition",
+      "hover:bg-[var(--button-hover-black)]"
+    );
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded mb-4">
+      <h2 class="text-xl font-bold mb-2">${product.name}</h2>
+      <p class="text-sm font-semibold text-green-400 mb-4">Status: ${product.status}</p>
+      <button class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        See Variants
+      </button>
+    `;
+    card.addEventListener("click", () => openModal(product));
+    productGrid.appendChild(card);
+  });
+}
+
+  // Open Modal
+  function openModal(product) {
+    modalProductName.textContent = product.name;
+    modalProductDetails.innerHTML = `
+      <p class="text-green-400 font-semibold mb-2">Status: ${product.status}</p>
+      <ul class="list-disc pl-5 text-gray-300 space-y-1">
+        ${product.features.map((feature) => `<li>${feature}</li>`).join("")}
+      </ul>
+    `;
+    const buyButton = buyForm.querySelector("button[type='submit']");
+    buyButton.setAttribute("data-sellsn-gid", product.product_id);
+
+    productModal.classList.remove("hidden");
+    modalBackdrop.classList.remove("hidden");
+  }
+
+  // Close Modal
+  document.getElementById("closeModal").addEventListener("click", closeModal);
+  modalBackdrop.addEventListener("click", closeModal);
+
+  function closeModal() {
+    productModal.classList.add("hidden");
+    modalBackdrop.classList.add("hidden");
+  }
+
+  // Handle Purchase
+  buyForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const plan = document.getElementById("subscriptionPlan").value;
+    closeModal();
+  });
+
+  // Initialize Product Grid
+  renderProducts();
+</script>
+<script>
+  function showPopup() {
+      const notification = document.getElementById("notification");
+      notification.classList.remove("hidden");
+      notification.classList.add("slide-in");
+  
+      // Automatically hide the notification after 25 seconds
+      setTimeout(() => {
+        notification.classList.add("slide-out");
+        setTimeout(() => {
+          notification.classList.add("hidden");
+        }, 500); // Allow slide-out animation to complete
+      }, 25000);
+    }
+  
+    function closePopup() {
+      const notification = document.getElementById("notification");
+      notification.classList.add("slide-out");
+      setTimeout(() => {
+        notification.classList.add("hidden");
+      }, 500); // Allow slide-out animation to complete
+    }
+
+    // Attach Event Listeners
+productCloseModal.addEventListener("click", closeModal);
+modalBackdrop.addEventListener("click", closeModal);
+</script>
+</body>
+</html>

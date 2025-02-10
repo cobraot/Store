@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nizzware Solutions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+     :root {
+      --lighter-black: #222; 
+      --dark-black: #171717; 
+      --blue-outline: #0269d9; 
+      --button-hover-black: #1e1e1e; 
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    .slide-in {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+
+    .slide-out {
+      animation: slideOut 0.5s ease-in forwards;
+    }
+    @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  header {
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .section-animate {
+    opacity: 0;
+    animation: zoomIn 0.8s ease-in-out forwards;
+  }
+
+  .card-slide-left {
+    opacity: 0;
+    animation: slideInLeft 0.8s ease-in-out forwards;
+  }
+
+  .card-slide-right {
+    opacity: 0;
+    animation: slideInRight 0.8s ease-in-out forwards;
+  }
+
+  button:hover, 
+  a:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .title-box {
+  background-color: #1e1e1e; /* Adjust to your existing box color */
+  border: 2px solid #0269d9; /* Colored border */
+  border-radius: 10px; /* Matches rounded corners */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4); /* Matches the style */
+  margin: 30px auto; /* Centers the box */
+  max-width: 1580px; /* Same width as the showcase */
+}
+
+.title-box h2 {
+  font-size: 2.5rem; /* Tailwind's text-4xl equivalent */
+  color: #ffffff; /* Matches your text color */
+  font-weight: bold;
+}
+
+  </style>
+</head>
+<body class="bg-[var(--lighter-black)] text-white min-h-screen flex flex-col" onload="showPopup()">
+
+  <!-- Notification Popup -->
+  <div id="notification" 
+       class="hidden fixed top-40 right-5 bg-[var(--dark-black)] text-white p-4 rounded-lg shadow-lg border-2 border-[var(--blue-outline)] w-80 z-50">
+    <div class="flex justify-between items-start">
+      <div>
+        <h4 class="text-lg font-bold">🔥 Are You In Our Discord?</h4>
+        <p class="text-gray-300 text-sm mt-1">Join our Discord for updates or purchase now to get started!</p>
+      </div>
+      <button onclick="closePopup()" class="text-gray-400 hover:text-white text-lg font-bold">✖</button>
+    </div>
+    <div class="flex space-x-2 mt-3">
+      <a href="https://discord.gg/nizzware" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition">Join Discord</a>
+      <a href="/shop" class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition">Purchase Now</a>
+    </div>
+  </div>
+
+
+  <header class="bg-[var(--dark-black)] py-4 px-6 shadow-lg border-b-4 border-[var(--blue-outline)] sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo Section -->
+      <div class="flex items-center space-x-3">
+        <img src="/images/logo.png" alt="Logo" class="w-12 h-12 rounded-full">
+        <h1 class="text-2xl font-bold text-white">Nizzware Solutions</h1>
+      </div>
+      <!-- Hamburger Icon for Mobile -->
+      <button id="menuToggle" class="text-white md:hidden focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <!-- Navigation Links -->
+      <nav id="menu" class="hidden md:flex md:space-x-6 items-center">
+        <!--<a href="/reseller-dashboard" class="text-gray-300 hover:text-blue-400 transition">Reseller Dashboard</a> -->
+        <!--<a href="/login" class="text-gray-300 hover:text-blue-400 transition">Customer Login</a>-->
+        <a href="/shop" class="text-gray-300 hover:text-blue-400 transition">Shop</a>
+        <a href="/status" class="text-gray-300 hover:text-blue-400 transition">Status</a>
+        <a href="/docs" class="text-gray-300 hover:text-blue-400 transition">Downloads</a>
+        <!--<a href="/products" class="text-gray-300 hover:text-blue-400 transition">Products</a>-->
+        <a href="/faq" class="text-gray-300 hover:text-blue-400 transition">About Us</a>
+        <a href="/admin" class="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-lg transition">Admin</a>
+      </nav>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden bg-[var(--lighter-black)] border-t-2 border-[var(--blue-outline)] md:hidden">
+      <nav class="flex flex-col space-y-4 py-4 px-6">
+        <!--<a href="/reseller-dashboard" class="text-gray-300 hover:text-blue-400 transition">Reseller Dashboard</a>-->
+        <!--<a href="/login" class="text-gray-300 hover:text-blue-400 transition">Customer Login</a>-->
+        <a href="/shop" class="text-gray-300 hover:text-blue-400 transition">Shop</a>
+        <a href="/status" class="text-gray-300 hover:text-blue-400 transition">Status</a>
+        <a href="/docs" class="text-gray-300 hover:text-blue-400 transition">Downloads</a>
+        <!--<a href="/products" class="text-gray-300 hover:text-blue-400 transition">Products</a>-->
+        <a href="/faq" class="text-gray-300 hover:text-blue-400 transition">FAQ</a>
+        <a href="/admin" class="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-lg transition">Admin</a>
+      </nav>
+    </div>
+  </header>
+  
+
+  <section 
+  class="bg-[var(--dark-black)] bg-cover bg-center h-[400px]" 
+  style="background-image: url('/images/section_bg.png');">
+</section>
+
+<section 
+ class="section-container py-10">
+  <div class="container mx-auto">
+    <!-- Styled Box -->
+    <div 
+    style="border: 2px solid #0269d9; background-color: #1e1e1e; border-radius: 10px; margin: 20px auto; width: 100%; max-width: 1460px; text-align: center; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);"
+    class="text-center bg-[#1e1e1e] border-2px border-blue-500 rounded-lg shadow-lg p-10">
+      <h2 class="text-5xl font-extrabold text-white mb-6">
+        Welcome to <span class="text-blue-400">Nizzware Solutions</span>
+      </h2>
+      <p class="text-lg text-gray-100 mb-10">
+        Giving You All Of Your Gaming Needs & Beyond.<br>
+        Tools, Accounts, Spoofers & Much More.<br>
+        No Middle Man Required.<br> 
+        Shop With The Source.
+      </p>
+      <a href="/shop" 
+         class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg text-lg transition">
+        Explore Our Cheats
+      </a>
+    </div>
+  </div>
+</section>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/swiper/swiper-bundle.min.css"
+/>
+
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<style>
+  body {
+    background: url('https://i.ibb.co/jWpw51S/BACKGROUND.png') no-repeat center center fixed;
+    background-size: cover; /* Ensures the background covers the entire viewport */
+  }
+
+  .section-container {
+    max-width: 80%; /* Limit the width of the entire section */
+    margin: 0 auto; /* Center horizontally */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Default for small screens */
+    gap: 20px; /* Space between text and GIF */
+  }
+
+  @media (min-width: 768px) {
+    .section-container {
+      flex-direction: row; /* Row layout for larger screens */
+      align-items: center; /* Center content vertically */
+    }
+  }
+
+
+
+  .gif-box {
+    flex: 1; /* Allow the GIF box to take available space */
+    border: 2px solid rgba(2, 105, 217, 0.8); /* Blue border */
+    background: rgba(23, 23, 23, 0.9); /* Same background as text */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Inner padding */
+    display: flex; /* Flexbox for centering the GIF */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+
+  img {
+    max-width: 50%; /* Ensure the GIF scales */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Slightly rounded corners */
+  }
+</style>
+
+<!-- Title Section -->
+<section class="title-box py-6 px-10 mb-10" 
+         style="border: 2px solid #0269d9; background-color: #1e1e1e; border-radius: 10px; margin: 20px auto; width: 100%; max-width: 1460px; text-align: center; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);">
+  <div class="container mx-auto">
+    <h2 class="text-4xl font-bold text-white">Have A Look At Our Showcase Below!!</h2>
+  </div>
+</section>
+
+<section class="section-container py-10">
+  <!-- Full-Width Slider Box -->
+  <div class="gif-box swiper" style="width: 100%; max-width: 1570px; margin: 20px auto;">
+    <div class="swiper-wrapper">
+      <!-- Slide 1 -->
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/BO6 External ESP.gif" alt="Cheat Preview 1" style="position: absolute; top: 40px; left: 40px; width: 30%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/External ESP.png" alt="Preview 1" style="position: absolute; top: 90px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+      <!-- Slide 2 -->
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/BO6 External.gif" alt="Cheat Preview 2" style="position: absolute; bottom: 130px; left: 40px; width: 40%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/BO6 External.png" alt="Preview 2" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+      <!-- Slide 3 -->
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/BO6 Internal.gif" alt="Cheat Preview 3" style="position: absolute; bottom: 90px; left: 20px; width: 45%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/BO6 Internal.png" alt="Preview 3" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+      <!-- Slide 4 -->
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/BO6AIO.gif" alt="Cheat Preview 4" style="position: absolute; top: 95px; left: 40px; width: 40%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/bo6aio.png" alt="Preview 4" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+      <!-- Slide 5 -->
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/CS2 EXTERNAL.gif" alt="Cheat Preview 5" style="position: absolute; bottom: 40px; left: 40px; width: 30%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/cs2.png" alt="Preview 5" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/cards/BO6Camo.png" alt="Cheat Preview 5" style="position: absolute; bottom: 60px; left: 40px; width: 40%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/bo6camo.png" alt="Preview 5" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/cards/FortniteExternal.gif" alt="Cheat Preview 5" style="position: absolute; bottom: 40px; left: 40px; width: 30%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/fn.png" alt="Preview 5" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+      <div class="swiper-slide" style="position: relative; width: 100%; height: 500px;">
+        <img src="/images/cards/FiveM.gif" alt="Cheat Preview 5" style="position: absolute; bottom: 40px; left: 40px; width: 30%; height: auto; border-radius: 10px;">
+        <img src="/images/cards/Fivem.png" alt="Preview 5" style="position: absolute; bottom: 80px; right: 20px; width: 50%; height: auto; border-radius: 10px;">
+      </div>
+    </div>
+
+    <!-- Pagination and Navigation -->
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+</section>
+
+
+
+
+<style>
+  /* Styling for the "Why Do Others Shop With Nizzware Solutions" Section */
+  .boxed-section {
+    max-width: 80%; /* Limit the width to 80% */
+    margin: 0 auto; /* Center alignment */
+    border: 2px solid rgba(2, 105, 217, 0.8); /* Blue border */
+    background: rgba(23, 23, 23, 0.9); /* Semi-transparent black background */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Inner padding */
+  }
+
+  .feature-card {
+    background: linear-gradient(to right, #1f2937, #374151); /* Gradient background */
+    border: 2px solid rgba(2, 105, 217, 0.8); /* Blue border */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Add shadow */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Inner padding */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+  }
+
+  .feature-card:hover {
+    transform: scale(1.05); /* Slight enlargement on hover */
+    box-shadow: 0 0 20px rgba(2, 105, 217, 0.8); /* Blue glow on hover */
+  }
+</style>
+
+<section class="py-10 boxed-section text-center">
+  <div class="container mx-auto">
+    <h3 class="text-3xl font-bold text-white mb-6">Why Do Others Shop With Nizzware Solutions</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Feature Card 1 -->
+      <div class="feature-card">
+        <h4 class="text-xl font-bold text-blue-400 mb-4">Fully Undetected</h4>
+        <p class="text-gray-300">Security & Detections Are Our Highest Priority</p>
+      </div>
+      <!-- Feature Card 2 -->
+      <div class="feature-card">
+        <h4 class="text-xl font-bold text-blue-400 mb-4">User-Friendly</h4>
+        <p class="text-gray-300">
+          We Have Guides Made To Make Using Tools Easy, Automatic Tools To Help Increase Functionality.
+        </p>
+      </div>
+      <!-- Feature Card 3 -->
+      <div class="feature-card">
+        <h4 class="text-xl font-bold text-blue-400 mb-4">24/7 Support</h4>
+        <p class="text-gray-300">
+          We Have 18 Staff Members Worldwide. Making Our Support Second To None.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-[var(--dark-black)] py-4 mt-10 text-center text-gray-300 border-t-4 border-[var(--blue-outline)]">
+  <p>© 2024 Nizzware Solutions. All rights reserved.</p>
+  <p>
+    Join us on 
+    <a href="https://discord.gg/nizzware" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">
+      Discord
+    </a>
+  </p>
+</footer>
+
+<script>
+function showPopup() {
+    const notification = document.getElementById("notification");
+    notification.classList.remove("hidden");
+    notification.classList.add("slide-in");
+
+    // Automatically hide the notification after 25 seconds
+    setTimeout(() => {
+      notification.classList.add("slide-out");
+      setTimeout(() => {
+        notification.classList.add("hidden");
+      }, 500); // Allow slide-out animation to complete
+    }, 25000);
+  }
+  
+  document.addEventListener("DOMContentLoaded", () => {
+  const swiper = new Swiper(".swiper", {
+    loop: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    slidesPerView: 1, // Show one slide at a time
+    spaceBetween: 20, // Space between slides
+  });
+});
+  function closePopup() {
+    const notification = document.getElementById("notification");
+    notification.classList.add("slide-out");
+    setTimeout(() => {
+      notification.classList.add("hidden");
+    }, 500); // Allow slide-out animation to complete
+  }
+
+  function animateOnScroll() {
+    const sections = document.querySelectorAll('.section-animate, .card-slide-left, .card-slide-right');
+    const triggerPoint = window.innerHeight * 0.8; // Trigger when 80% of the section is visible
+
+    sections.forEach(section => {
+      const sectionTop = section.getBoundingClientRect().top;
+
+      if (sectionTop < triggerPoint) {
+        section.style.opacity = '1'; // Ensures smooth animation
+      }
+    });
+  }
+
+  window.addEventListener('scroll', animateOnScroll);
+</script>
+</body>
+</html>
